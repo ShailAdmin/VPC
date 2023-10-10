@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create a VPC with six subnets in two Availability Zones.
+
+Parameters:
+  VpcCIDRBlock:
+    Description: 'CIDR block for the VPC'
+    Type: String
+    Default: '10.0.0.0/16'
+
+Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDRBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  SubnetAZ1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs '']
+      VpcId: !Ref MyVPC
+      CidrBlock: '10.0.1.0/24'
+
+  SubnetAZ1B:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs '']
+      VpcId: !Ref MyVPC
+      CidrBlock: '10.0.2.0/24'
+
+  SubnetAZ1C:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs '']
+      VpcId: !Ref MyVPC
+      CidrBlock: '10.0.3.0/24'
+
+  SubnetAZ2A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs '']
+      VpcId: !Ref MyVPC
+      CidrBlock: '10.0.4.0/24'
+
+  SubnetAZ2B:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs '']
+      VpcId: !Ref MyVPC
+      CidrBlock: '10.0.5.0/24'
+
+  SubnetAZ2C:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs '']
+      VpcId: !Ref MyVPC
+      CidrBlock: '10.0.6.0/24'
+
+Outputs:
+  VPCId:
+    Description: 'VPC Id'
+    Value: !Ref MyVPC
+
+  SubnetIdsAZ1:
+    Description: 'Subnet IDs in AZ1'
+    Value:
+      - !Ref SubnetAZ1A
+      - !Ref SubnetAZ1B
+      - !Ref SubnetAZ1C
+
+  SubnetIdsAZ2:
+    Description: 'Subnet IDs in AZ2'
+    Value:
+      - !Ref SubnetAZ2A
+      - !Ref SubnetAZ2B
+      - !Ref SubnetAZ2C
